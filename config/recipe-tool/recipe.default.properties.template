@@ -1,0 +1,112 @@
+##### Recipe properties
+##### Unique recipe job name
+falcon.recipe.name=sales-monthly
+
+##### Workflow properties
+
+falcon.recipe.workflow.name=hdfs-dr-workflow
+# Provide Wf absolute path. This can be HDFS or local FS path. If WF is on local FS it will be copied to HDFS
+falcon.recipe.workflow.path=/apps/data-mirroring/workflows/hdfs-replication-workflow.xml
+# Provide Wf lib absolute path. This can be HDFS or local FS path. If libs are on local FS it will be copied to HDFS
+#falcon.recipe.workflow.lib.path=/recipes/hdfs-replication/lib
+
+##### Cluster properties
+
+# Cluster where job should run
+#falcon.recipe.cluster.name=ha-cluster-primary
+falcon.recipe.cluster.name=ha-cluster-backup
+# Change the cluster hdfs write end point here. This is mandatory.
+#falcon.recipe.cluster.hdfs.writeEndPoint=hdfs://primary:8020
+falcon.recipe.cluster.hdfs.writeEndPoint=hdfs://backup:8020
+# Change the cluster validity start time here
+falcon.recipe.cluster.validity.start=2016-04-20T00:00Z
+# Change the cluster validity end time here
+falcon.recipe.cluster.validity.end=2016-04-30T00:00Z
+
+##### Scheduling properties
+
+# Change the recipe frequency here. Valid frequency type are minutes, hours, days, months
+falcon.recipe.process.frequency=minutes(30)
+
+##### Tag properties - An optional list of comma separated tags, Key Value Pairs, separated by comma
+##### Uncomment to add tags
+
+#falcon.recipe.tags=
+
+##### Retry policy properties
+
+falcon.recipe.retry.policy=periodic
+falcon.recipe.retry.delay=minutes(30)
+falcon.recipe.retry.attempts=3
+
+##### ACL properties - Uncomment and change ACL if authorization is enabled
+
+falcon.recipe.acl.owner=ambari-qa
+falcon.recipe.acl.group=users
+falcon.recipe.acl.permission=0x755
+falcon.recipe.nn.principal=nn/_HOST@EXAMPLE.COM
+
+################################
+##### Custom Job properties
+################################
+
+# To ceil the max events processed each time job runs. Set it to max value depending on your bandwidth limit.
+# Setting it to -1 will process all the events but can hog up the bandwidth. Use it judiciously!
+maxEvents=-1
+# Change it to specify the maximum number of mappers for replication
+replicationMaxMaps=5
+# Change it to specify the maximum number of mappers for DistCP
+distcpMaxMaps=1
+# Change it to specify the bandwidth in MB for each mapper in DistCP
+distcpMapBandwidth=100
+
+##### Email Notification for Falcon instance completion
+
+falcon.recipe.notification.type=email
+falcon.recipe.notification.receivers=NA
+
+
+
+##### HDFS Mirror Recipe
+
+# Specify multiple comma separated source directories
+drSourceDir=/data/hdfsexample
+drSourceClusterFS=hdfs://primary:8020
+drTargetDir=/data/hdfsexample
+drTargetClusterFS=hdfs://backup:8020
+
+
+
+##### Hive Mirror Recipe
+
+##### Source Cluster DR properties
+sourceCluster=ha-cluster-primary
+sourceMetastoreUri=thrift://demoha-cluster-jp-10:9083
+sourceHiveServer2Uri=hive2://demoha-cluster-jp-10:10000
+# For DB level replicaiton to replicate multiple databases specify comma separated list of tables
+sourceDatabase=hivedr
+# For DB level replication specify * for sourceTable.
+# For table level replication to replicate multiple tables specify comma separated list of tables
+sourceTable=*
+## Please specify staging dir in the source without fully qualified domain name.
+sourceStagingPath=/apps/falcon/cluster-primary/staging
+sourceNN=hdfs://primary:8020
+# Specify kerberos principal required to access source namenode and hive servers, optional on non-secure cluster.
+sourceNNKerberosPrincipal=nn/_HOST@HWQE.HORTONWORKS.COM
+sourceHiveMetastoreKerberosPrincipal=hive/_HOST@HWQE.HORTONWORKS.COM
+sourceHive2KerberosPrincipal=hive/_HOST@HWQE.HORTONWORKS.COM
+
+##### Target Cluster DR properties
+targetCluster=ha-cluster-backup
+targetMetastoreUri=thrift://demoha-cluster-jp-1:9083
+targetHiveServer2Uri=hive2://demoha-cluster-jp-1:10000
+## Please specify staging dir in the target without fully qualified domain name.
+targetStagingPath=/apps/falcon/cluster-backup/staging
+targetNN=hdfs://backup:8020
+# Specify kerberos principal required to access target namenode and hive servers, optional on non-secure cluster.
+targetNNKerberosPrincipal=nn/_HOST@HWQE.HORTONWORKS.COM
+targetHiveMetastoreKerberosPrincipal=hive/_HOST@HWQE.HORTONWORKS.COM
+targetHive2KerberosPrincipal=hive/_HOST@HWQE.HORTONWORKS.COM
+
+
+
