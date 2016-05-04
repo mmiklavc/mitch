@@ -35,7 +35,7 @@ ROW FORMAT DELIMITED
 ENDSH
 
     cat << ENDSH >> load.ddl
-LOAD DATA LOCAL INPATH 'data.csv' OVERWRITE INTO TABLE ${DATABASE}.feed${i} PARTITION (ds='2016-05-01');"
+LOAD DATA LOCAL INPATH 'data.csv' OVERWRITE INTO TABLE ${DATABASE}.feed${i} PARTITION (ds='2016-05-01');
 ENDSH
 
     cat << ENDSH >> bootstrap-out.ddl
